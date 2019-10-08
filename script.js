@@ -64,7 +64,8 @@ function loadLabeledImages() {
     "Miriam",
     "Leo",
     "Beyonce",
-    "Rihanna"
+    "Rihanna",
+    "Bearded Guy"
   ];
   return Promise.all(
     labels.map(async label => {
