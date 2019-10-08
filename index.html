@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="face-api.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  </head>
+
+  <body>
+    <div style="position: relative" class="margin">
+      <video id="inputVideo" width="720" height="560" autoplay muted></video>
+      <canvas style="position: absolute" id="overlay" />
+    </div>
+
+  </body>
+  <script>
+    $(document).ready(function()
+    {
+      run()
+    })
+
+
+    async function run()
+    {
+      // load the models
+      await faceapi.loadMtcnnModel("/models")
+      await faceapi.loadFaceRecognitionModel("/models")
+
+      // try to access users webcam and stream the images
+      // to the video element
+      const videoEl = document.getElementById('inputVideo')
+      navigator.getUserMedia(
+        {
+          video:
+          {}
+        },
+        stream => videoEl.srcObject = stream,
+        err => console.error(err)
+      )
+
+
+      const mtcnnForwardParams = {
+        // number of scaled versions of the input image passed through the CNN
+        // of the first stage, lower numbers will result in lower inference time,
+        // but will also be less accurate
+        maxNumScales: 10,
+        // scale factor used to calculate the scale steps of the image
+        // pyramid used in stage 1
+        scaleFactor: 0.709,
+        // the score threshold values used to filter the bounding
+        // boxes of stage 1, 2 and 3
+        scoreThresholds: [0.6, 0.7, 0.7],
+        // mininum face size to expect, the higher the faster processing will be,
+        // but smaller faces won't be detected
+        minFaceSize: 200
+      }
+
+      const mtcnnResults = await faceapi.mtcnn(document.getElementById('inputVideo'), mtcnnForwardParams)
+
+
+      faceapi.drawDetections('overlay', mtcnnResults.map(res => res.faceDetection),
+      {
+        withScore: false
+      })
+      faceapi.drawLandmarks('overlay', mtcnnResults.map(res => res.faceLandmarks),
+      {
+        lineWidth: 4,
+        color: 'red'
+      })
+      const alignedFaceBoxes = results.map(
+        (
+        {
+          faceLandmarks
+        }) => faceLandmarks.align()
+      )
+
+      const alignedFaceTensors = await extractFaceTensors(input, alignedFaceBoxes)
+
+      const descriptors = await Promise.all(alignedFaceTensors.map(
+        faceTensor => faceapi.computeFaceDescriptor(faceTensor)
+      ))
+
+      // free memory
+      alignedFaceTensors.forEach(t => t.dispose())
+
+    }
+  </script>
+
+</html>
