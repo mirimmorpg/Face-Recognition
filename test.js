@@ -9,6 +9,9 @@ Promise.all([
 ]).then(startVideo);
 
 async function startVideo() {
+  const labeledFaceDescriptors = await loadLabeledImages();
+  const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
+
   navigator.getUserMedia(
     {
       video: {}
@@ -17,11 +20,7 @@ async function startVideo() {
     err => console.error(err)
   );
 
-  video.addEventListener("play", async () => {
-    const labeledFaceDescriptors = await loadLabeledImages();
-    const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
-    document.body.append("Loaded");
-
+  video.addEventListener("play", () => {
     const canvas = faceapi.createCanvasFromMedia(video);
     document.body.append(canvas);
     const displaySize = { width: video.width, height: video.height };
@@ -35,6 +34,10 @@ async function startVideo() {
 
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
+      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+      faceapi.draw.drawDetections(canvas, resizedDetections);
+      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+      faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
       const results = resizedDetections.map(d =>
         faceMatcher.findBestMatch(d.descriptor)
       );
@@ -45,11 +48,6 @@ async function startVideo() {
         });
         drawBox.draw(canvas);
       });
-
-      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-      faceapi.draw.drawDetections(canvas, resizedDetections);
-      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-      faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
     }, 100);
   });
 }
