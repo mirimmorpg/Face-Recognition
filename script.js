@@ -51,10 +51,12 @@ async function startVideo() {
           label: result.toString()
         });
         drawBox.draw(canvas);
-        if (result.distance > 0.5 && result.label !== "unknown") {
-          overlay.src = "overlay/Facescan_03.png";
-        } else if (result.distance > 0.5 && result.label == "Götz") {
+        if (result.distance > 0.35 && result.label == "Götz") {
           overlay.src = "overlay/Facescan_02.png";
+          console.log(result.distance);
+        } else if (result.distance > 0.4 && result.label !== "unknown") {
+          overlay.src = "overlay/Facescan_03.png";
+          console.log(result.distance);
         } else {
           overlay.src = "overlay/Facescan_02.png";
         }
@@ -68,7 +70,7 @@ function loadLabeledImages() {
   return Promise.all(
     labels.map(async label => {
       const descriptions = [];
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= 6; i++) {
         const img = await faceapi.fetchImage(
           `./labeled_images/${label}/${i}.jpg`
         );
