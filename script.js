@@ -14,13 +14,16 @@ async function startVideo() {
   const labeledFaceDescriptors = await loadLabeledImages();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
-  navigator.getUserMedia(
-    {
-      video: {}
-    },
-    stream => (video.srcObject = stream),
-    err => console.error(err)
-  );
+  const facingMode = "user";
+  const constraints = {
+    audio: false,
+    video: {
+      facingMode: facingMode
+    }
+  };
+  navigator.mediaDevices
+    .getUserMedia(constraints)
+    .then(stream => (video.srcObject = stream), err => console.error(err));
 
   video.addEventListener("play", () => {
     const canvas = faceapi.createCanvasFromMedia(video);
