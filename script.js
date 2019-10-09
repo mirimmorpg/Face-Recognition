@@ -1,4 +1,6 @@
 const video = document.getElementById("video");
+const overlay = document.getElementById("overlay");
+//overlay.src = "/overlay/Facescan_"
 
 Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
@@ -29,15 +31,14 @@ async function startVideo() {
       const detections = await faceapi
         .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
-        .withFaceExpressions()
         .withFaceDescriptors();
 
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
       faceapi.draw.drawDetections(canvas, resizedDetections);
-      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-      faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+      //faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+      //faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
       const results = resizedDetections.map(d =>
         faceMatcher.findBestMatch(d.descriptor)
       );
@@ -47,22 +48,31 @@ async function startVideo() {
           label: result.toString()
         });
         drawBox.draw(canvas);
+        overlay.src =
+          result.distance > 0.5 && result.label != "unknown"
+            ? "overlay/Facescan_03.png"
+            : "overlay/Facescan_02.png";
       });
-    }, 100);
+    }, 2000);
   });
 }
+
+function checkFace() {
+  if (result.distance > 0.58) {
+    overlay.src = "overlay/Facescan_03.png";
+  } else {
+    overlay.src = "overlay/Facescan_02.png";
+  }
+}
+
 function loadLabeledImages() {
   const labels = [
     "Black Widow",
     "Captain America",
     "Captain Marvel",
-    "Dennis",
-    "Hawkeye",
-    "Jim Rhodes",
     "Thor",
     "Tony Stark",
     "Miriam",
-    "Leo",
     "Beyonce",
     "Rihanna",
     "Bearded Guy"

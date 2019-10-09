@@ -2,9 +2,9 @@
 <html lang="en">
 
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script defer src="face-api.min.js"></script>
     <script defer src="script.js"></script>
     <title>Webcam Detection</title>
@@ -18,6 +18,10 @@
         justify-content: center;
       }
 
+      div {
+        position: absolute;
+      }
+
       canvas {
         position: absolute;
       }
@@ -25,7 +29,10 @@
   </head>
 
   <body>
-    <video id="video" width="720" height="560" autoplay muted></video>
+    <div id="container">
+      <img id="overlay" src="overlay/Facescan_01.png" alt="">
+    </div>
+    <video id="video" width="1080" height="1920" autoplay muted></video>
   </body>
 
 </html>
