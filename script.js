@@ -48,39 +48,24 @@ async function startVideo() {
           label: result.toString()
         });
         drawBox.draw(canvas);
-        overlay.src =
-          result.distance > 0.5 && result.label != "unknown"
-            ? "overlay/Facescan_03.png"
-            : "overlay/Facescan_02.png";
+        if (result.distance > 0.5 && result.label !== "unknown") {
+          overlay.src = "overlay/Facescan_03.png";
+        } else if (result.distance > 0.5 && result.label == "Götz") {
+          overlay.src = "overlay/Facescan_02.png";
+        } else {
+          overlay.src = "overlay/Facescan_02.png";
+        }
       });
-    }, 2000);
+    }, 1000);
   });
 }
 
-function checkFace() {
-  if (result.distance > 0.58) {
-    overlay.src = "overlay/Facescan_03.png";
-  } else {
-    overlay.src = "overlay/Facescan_02.png";
-  }
-}
-
 function loadLabeledImages() {
-  const labels = [
-    "Black Widow",
-    "Captain America",
-    "Captain Marvel",
-    "Thor",
-    "Tony Stark",
-    "Miriam",
-    "Beyonce",
-    "Rihanna",
-    "Bearded Guy"
-  ];
+  const labels = ["Lars Heitmüller", "Götz", "Miriam"];
   return Promise.all(
     labels.map(async label => {
       const descriptions = [];
-      for (let i = 1; i <= 2; i++) {
+      for (let i = 1; i <= 4; i++) {
         const img = await faceapi.fetchImage(
           `./labeled_images/${label}/${i}.jpg`
         );
