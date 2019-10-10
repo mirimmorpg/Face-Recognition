@@ -2,11 +2,11 @@ const video = document.getElementById("video");
 const overlay = document.getElementById("overlay");
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-  faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-  faceapi.nets.faceExpressionNet.loadFromUri("/models")
+  faceapi.nets.tinyFaceDetector.loadFromUri("./models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("./models"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("./models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("./models"),
+  faceapi.nets.faceExpressionNet.loadFromUri("./models")
 ]).then(startVideo);
 
 async function startVideo() {
@@ -49,7 +49,7 @@ async function startVideo() {
           label: result.toString()
         });
         drawBox.draw(canvas);
-        if (result.distance > 0.35 && result.label == "Götz") {
+        if (result.distance > 0.35 && result.label == "Goetz") {
           overlay.src = "overlay/Facescan_04.png";
         } else if (result.distance > 0.4 && result.label !== "unknown") {
           overlay.src = "overlay/Facescan_03.png";
@@ -64,7 +64,7 @@ async function startVideo() {
 }
 
 function loadLabeledImages() {
-  const labels = ["Lars Heitmüller", "Götz", "Miriam"];
+  const labels = ["Lars", "Goetz", "Miriam"];
   return Promise.all(
     labels.map(async label => {
       const descriptions = [];
