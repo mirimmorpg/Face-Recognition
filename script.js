@@ -1,6 +1,5 @@
 const video = document.getElementById("video");
 const overlay = document.getElementById("overlay");
-//overlay.src = "/overlay/Facescan_"
 
 Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
@@ -14,11 +13,10 @@ async function startVideo() {
   const labeledFaceDescriptors = await loadLabeledImages();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
-  const facingMode = "user";
   const constraints = {
     audio: false,
     video: {
-      facingMode: facingMode
+      facingMode: "user"
     }
   };
   navigator.mediaDevices
@@ -53,15 +51,16 @@ async function startVideo() {
         drawBox.draw(canvas);
         if (result.distance > 0.35 && result.label == "Götz") {
           overlay.src = "overlay/Facescan_04.png";
-          console.log(result.distance);
         } else if (result.distance > 0.4 && result.label !== "unknown") {
           overlay.src = "overlay/Facescan_03.png";
+        } else if (result.distance > 0.6 && result.label == "unknown") {
+          overlay.src = "overlay/Facescan_02.png";
           console.log(result.distance);
         } else {
-          overlay.src = "overlay/Facescan_02.png";
+          overlay.src = "overlay/Facescan_01.png";
         }
       });
-    }, 1000);
+    }, 2000);
   });
 }
 
