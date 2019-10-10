@@ -52,7 +52,7 @@ async function startVideo() {
         });
         drawBox.draw(canvas);
         if (result.distance > 0.35 && result.label == "Götz") {
-          overlay.src = "overlay/Facescan_02.png";
+          overlay.src = "overlay/Facescan_04.png";
           console.log(result.distance);
         } else if (result.distance > 0.4 && result.label !== "unknown") {
           overlay.src = "overlay/Facescan_03.png";
