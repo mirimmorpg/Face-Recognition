@@ -55,12 +55,11 @@ async function startVideo() {
           overlay.src = "overlay/Facescan_03.png";
         } else if (result.distance > 0.6 && result.label == "unknown") {
           overlay.src = "overlay/Facescan_02.png";
-          console.log(result.distance);
         } else {
           overlay.src = "overlay/Facescan_01.png";
         }
       });
-    }, 2000);
+    }, 1000);
   });
 }
 
