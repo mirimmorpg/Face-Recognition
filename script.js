@@ -6,12 +6,6 @@ const constraints = {
   video: true
 };
 
-navigator.getUserMedia =
-  navigator.getUserMedia ||
-  navigator.webkitGetUserMedia ||
-  navigator.mozGetUserMedia ||
-  navigator.msGetUserMedia;
-
 function successCallback(stream) {
   video.srcObject = stream;
 }
@@ -24,7 +18,7 @@ navigator.mediaDevices
   .then(successCallback)
   .catch(errorCallback);
 
-Promise.all([
+/*Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri("./models"),
   faceapi.nets.faceLandmark68Net.loadFromUri("./models"),
   faceapi.nets.faceRecognitionNet.loadFromUri("./models"),
@@ -44,7 +38,7 @@ async function startVideo() {
     video.src = window.webkitURL.createObjectURL(stream);
   } else {
     video.src = stream;
-  }*/
+  }
 
   video.addEventListener("play", () => {
     const canvas = faceapi.createCanvasFromMedia(video);
@@ -105,4 +99,4 @@ function loadLabeledImages() {
       return new faceapi.LabeledFaceDescriptors(label, descriptions);
     })
   );
-}
+}*/
