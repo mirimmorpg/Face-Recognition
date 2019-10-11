@@ -1,6 +1,29 @@
 const video = document.getElementById("video");
 const overlay = document.getElementById("overlay");
 
+const constraints = {
+  audio: false,
+  video: true
+};
+
+navigator.getUserMedia =
+  navigator.getUserMedia ||
+  navigator.webkitGetUserMedia ||
+  navigator.mozGetUserMedia ||
+  navigator.msGetUserMedia;
+
+function successCallback(stream) {
+  video.srcObject = stream;
+}
+
+function errorCallback(error) {
+  console.log("navigator.getUserMedia error: ", error);
+}
+navigator.mediaDevices
+  .getUserMedia(constraints)
+  .then(successCallback)
+  .catch(errorCallback);
+
 Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri("./models"),
   faceapi.nets.faceLandmark68Net.loadFromUri("./models"),
@@ -13,28 +36,6 @@ async function startVideo() {
   const labeledFaceDescriptors = await loadLabeledImages();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
-  const constraints = {
-    audio: false,
-    video: true
-  };
-
-  navigator.getUserMedia =
-    navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia;
-
-  function successCallback(stream) {
-    video.srcObject = stream;
-  }
-
-  function errorCallback(error) {
-    console.log("navigator.getUserMedia error: ", error);
-  }
-  navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then(successCallback)
-    .catch(errorCallback);
   /*
   navigator.mediaDevices
     .getUserMedia(constraints)
