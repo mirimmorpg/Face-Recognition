@@ -15,13 +15,35 @@ async function startVideo() {
 
   const constraints = {
     audio: false,
-    video: {
-      facingMode: "user"
-    }
+    video: true
   };
+
+  navigator.getUserMedia =
+    navigator.getUserMedia ||
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia;
+
+  function successCallback(stream) {
+    video.srcObject = stream;
+  }
+
+  function errorCallback(error) {
+    console.log("navigator.getUserMedia error: ", error);
+  }
+  navigator.mediaDevices
+    .getUserMedia(constraints)
+    .then(successCallback)
+    .catch(errorCallback);
+  /*
   navigator.mediaDevices
     .getUserMedia(constraints)
     .then(stream => (video.srcObject = stream), err => console.error(err));
+  if (window.webkitURL) {
+    video.src = window.webkitURL.createObjectURL(stream);
+  } else {
+    video.src = stream;
+  }*/
 
   video.addEventListener("play", () => {
     const canvas = faceapi.createCanvasFromMedia(video);
