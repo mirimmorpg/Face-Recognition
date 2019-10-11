@@ -1,12 +1,14 @@
-const video = document.getElementById("video");
+const video = document.querySelector("video");
 const overlay = document.getElementById("overlay");
 
 const constraints = {
-  audio: false,
-  video: true
+  video: true,
+  facingMode: "user"
 };
 
 function successCallback(stream) {
+  window.stream = stream; // only to make stream available to console
+
   video.srcObject = stream;
 }
 
