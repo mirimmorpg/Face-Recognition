@@ -7,8 +7,6 @@ const constraints = {
 };
 
 function successCallback(stream) {
-  window.stream = stream; // only to make stream available to console
-
   video.srcObject = stream;
 }
 
@@ -20,7 +18,7 @@ navigator.mediaDevices
   .then(successCallback)
   .catch(errorCallback);
 
-/*Promise.all([
+Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri("./models"),
   faceapi.nets.faceLandmark68Net.loadFromUri("./models"),
   faceapi.nets.faceRecognitionNet.loadFromUri("./models"),
@@ -32,15 +30,18 @@ async function startVideo() {
   const labeledFaceDescriptors = await loadLabeledImages();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
-  /*
+  function successCallback(stream) {
+    video.srcObject = stream;
+  }
+
+  function errorCallback(error) {
+    console.log("navigator.getUserMedia error: ", error);
+  }
+
   navigator.mediaDevices
     .getUserMedia(constraints)
-    .then(stream => (video.srcObject = stream), err => console.error(err));
-  if (window.webkitURL) {
-    video.src = window.webkitURL.createObjectURL(stream);
-  } else {
-    video.src = stream;
-  }
+    .then(successCallback)
+    .catch(errorCallback);
 
   video.addEventListener("play", () => {
     const canvas = faceapi.createCanvasFromMedia(video);
@@ -96,9 +97,10 @@ function loadLabeledImages() {
           .withFaceLandmarks()
           .withFaceDescriptor();
         descriptions.push(detections.descriptor);
+        console.log(descriptions);
       }
 
       return new faceapi.LabeledFaceDescriptors(label, descriptions);
     })
   );
-}*/
+}
