@@ -30,14 +30,6 @@ async function startVideo() {
   const labeledFaceDescriptors = await loadLabeledImages();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
-  function successCallback(stream) {
-    video.srcObject = stream;
-  }
-
-  function errorCallback(error) {
-    console.log("navigator.getUserMedia error: ", error);
-  }
-
   navigator.mediaDevices
     .getUserMedia(constraints)
     .then(successCallback)
@@ -52,6 +44,7 @@ async function startVideo() {
       const detections = await faceapi
         .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
+        .withFaceExpressions()
         .withFaceDescriptors();
 
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
@@ -97,7 +90,6 @@ function loadLabeledImages() {
           .withFaceLandmarks()
           .withFaceDescriptor();
         descriptions.push(detections.descriptor);
-        console.log(descriptions);
       }
 
       return new faceapi.LabeledFaceDescriptors(label, descriptions);
