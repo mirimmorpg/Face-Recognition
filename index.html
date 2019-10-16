@@ -12,15 +12,32 @@
       body {
         margin: 0;
         padding: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+      }
 
+      div {
+        position: absolute;
+        z-index: 2;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+
+      canvas {
+        position: absolute;
       }
     </style>
   </head>
 
   <body>
-    <!--   <div id="container">
-     <img id="overlay" src="overlay/Facescan_01.png" alt="">
-    </div>-->
+    <div id="container">
+      <img id="overlay" src="overlay/Facescan_01.png" alt="" />
+    </div>
     <video id="video" width="1080" height="1920" autoplay muted></video>
   </body>
 
